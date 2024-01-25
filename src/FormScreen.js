@@ -1,26 +1,42 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import axios from "axios";
+import styled from "styled-components";
 
 const FormContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh; /* Ensure the form container takes at least the full viewport height */
-  background-color: #87ceeb; /* Sky Blue */
-`;
-const CardContainer = styled.div`
-  background: linear-gradient(135deg, #0a4466, #00bcd4); /* Sea Blue to Cyan */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  max-width: 800px;
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.2); /* Glass-like transparent white background */
-  backdrop-filter: blur(10px); /* Apply a blur for better transparency effect */
-  border: 1px solid rgba(255, 255, 255, 0.4); /* Optional: Add a border for better visibility */
+  background-color: #171f38;
 `;
 
+// const Circle = styled.div`
+//  position: relative;
+//   bottom: 50%; /* Position 50% below the bottom of the card */
+//   right: 25%; /* Position 25% to the right of the card's right edge */
+//   width: 200px;
+//   height: 200px;
+//   background-color: #fb6ca1;
+//   border-radius: 50%;
+//   overflow: hidden; 
+
+//   /* Clip the circle to the card container's boundaries */
+//   clip-path: inset(0 0 50% 0); /* Clip the top and left edges */
+// `;
+
+const CardContainer = styled.div`
+  background: #242e4c;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  ${"" /* display: flex; */}
+  max-width: 1200px;
+  width: 100%;
+  ${
+    "" /* background-color: rgba(250, 255, 255, 0.25); 
+  backdrop-filter: blur(10px);  */
+  }
+  ${"" /* border: 1px solid rgba(255, 255, 255, 0.2);  */}
+`;
 
 const ContentContainer = styled.div`
   display: flex;
@@ -28,14 +44,13 @@ const ContentContainer = styled.div`
   width: 100%; /* Ensure the content container takes full width */
 `;
 
-
 const LeftColumn = styled.div`
   color: white;
   padding: 20px;
   display: flex;
   flex-direction: column;
   flex: 1;
-`;  
+`;
 
 const RightColumn = styled.div`
   padding: 20px;
@@ -46,9 +61,9 @@ const FormField = styled.div`
   margin-bottom: 15px;
 
   label {
-    font-weight: bold;
+    
     margin-bottom: 5px;
-    color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+    color: rgba(255, 255, 255, 0.8);
   }
 
   input,
@@ -56,36 +71,56 @@ const FormField = styled.div`
   select {
     width: 100%;
     padding: 8px;
-    background-color: rgba(255, 255, 255, 0.2); /* Slightly transparent white background */
-    border: 1px solid #ccc;
+    background-color: inherit;
+    border: 2px solid #171f38;
     border-radius: 4px;
     margin-top: 5px;
+    color: #f5f5f5;
+
+    &:focus {
+      border-color: #fb6ca1; /* Pink color for focus */
+      -webkit-box-shadow: 0 0 0 1px rgba(250, 109, 170, 0.5);
+      box-shadow: 0 0 0 1px rgba(250, 109, 170, 0.5);
+    }
+
+    &:focus-visible {
+      outline: 0.5px solid #fb6ca1; /* Add a visible outline for keyboard focus */
+    }
   }
 `;
 
 const SubmitButton = styled.button`
   padding: 15px;
   font-size: 18px;
-  background-color: #ff4070;
+  background-color: #f56daa;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 100%; /* Expand the button to the full width */
-  margin-top: auto;
-  margin: 20px 0 0; /* Center the button vertically and add top margin */
+  /* Center the button horizontally */
+  width: 40%;
+  margin: 0 auto;
+  display: block; /* Ensure button takes full width */
 `;
+
 const FormScreen = ({ setFormData, setScreen }) => {
   const [formData, setLocalFormData] = useState({
-    authorizationKey: '',
-    title: '',
-    description: '',
-    tags: '',
-    date: '',
-    software: '',
+    authorizationKey: "",
+    title: "",
+    description: "",
+    tags: "",
+    date: "",
+    software: "",
     thumbnail: null,
     sourceFile: null,
   });
+
+  const [isAuthorizationKeyVisible, setIsAuthorizationKeyVisible] =
+    useState(false);
+
+  const toggleAuthorizationKeyVisibility = () => {
+    setIsAuthorizationKeyVisible(!isAuthorizationKeyVisible);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -113,7 +148,7 @@ const FormScreen = ({ setFormData, setScreen }) => {
       !formData.description ||
       !formData.tags
     ) {
-      alert('Please fill out all required fields');
+      alert("Please fill out all required fields");
       return;
     }
 
@@ -124,15 +159,18 @@ const FormScreen = ({ setFormData, setScreen }) => {
         formDataToSend.append(key, formData[key]);
       }
 
-      const response = await axios.post('http://www.example.com', formDataToSend);
+      const response = await axios.post(
+        "http://www.example.com",
+        formDataToSend
+      );
 
       // Handle success response, you can update state or navigate to the success screen
       setFormData(formData);
-      setScreen('success');
+      setScreen("success");
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error("Form submission error:", error);
       // Handle error, show error message to the user
-      alert('An error occurred while submitting the form');
+      alert("An error occurred while submitting the form");
     }
   };
 
@@ -140,18 +178,21 @@ const FormScreen = ({ setFormData, setScreen }) => {
     <form onSubmit={handleSubmit}>
       <FormContainer>
         <CardContainer>
-            
+          {/* <Circle /> */}
           <ContentContainer>
             <LeftColumn>
               <FormField>
                 <label htmlFor="authorizationKey">Authorization Key *</label>
                 <input
-                  type="text"
+                  type={isAuthorizationKeyVisible ? "text" : "password"} // Use password type initially
                   name="authorizationKey"
                   value={formData.authorizationKey}
                   onChange={handleInputChange}
                   required
                 />
+                <button onClick={toggleAuthorizationKeyVisibility}>
+                  {isAuthorizationKeyVisible ? "Hide" : "Show"}
+                </button>
               </FormField>
               <FormField>
                 <label htmlFor="title">Title *</label>
@@ -170,6 +211,10 @@ const FormScreen = ({ setFormData, setScreen }) => {
                   value={formData.description}
                   onChange={handleInputChange}
                   required
+                  rows={8} /* Adjust the number of visible rows as needed */
+                  style={{
+                    height: "200px",
+                  }} /* Alternatively, set a fixed height */
                 />
               </FormField>
             </LeftColumn>
@@ -191,6 +236,7 @@ const FormScreen = ({ setFormData, setScreen }) => {
                   name="date"
                   value={formData.date}
                   onChange={handleInputChange}
+                  required
                 />
               </FormField>
               <FormField>
@@ -201,7 +247,9 @@ const FormScreen = ({ setFormData, setScreen }) => {
                   onChange={handleInputChange}
                 >
                   <option value="">Select Software</option>
-                  {/* Add software options */}
+                  <option value="invision">InVision</option>
+                  <option value="figma">Figma</option>
+                  <option value="sketch">Sketch</option>
                 </select>
               </FormField>
               <FormField>
@@ -211,6 +259,7 @@ const FormScreen = ({ setFormData, setScreen }) => {
                   name="thumbnail"
                   accept="image/*"
                   onChange={handleFileUpload}
+                  required
                 />
               </FormField>
               <FormField>
@@ -220,12 +269,12 @@ const FormScreen = ({ setFormData, setScreen }) => {
                   name="sourceFile"
                   accept=".pdf, .doc, .docx"
                   onChange={handleFileUpload}
+                  required
                 />
               </FormField>
-              <SubmitButton type="submit">Submit</SubmitButton>
             </RightColumn>
           </ContentContainer>
-          
+          <SubmitButton type="submit">Submit</SubmitButton>
         </CardContainer>
       </FormContainer>
     </form>
